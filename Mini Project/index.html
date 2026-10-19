@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Penilaian Mahasiswa</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #00000015;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e293b;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+        }
+
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #hasil {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        #pesan {
+            color: #dc2626;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Penilaian Mahasiswa</h2>
+
+    <form id="formNilai">
+        <label for="tugas">Nilai Tugas (30%)</label>
+        <input type="number" id="tugas"
+               min="0" max="100" step="any"
+               required>
+
+        <label for="uts">Nilai UTS (30%)</label>
+        <input type="number" id="uts"
+               min="0" max="100" step="any"
+               required>
+
+        <label for="uas">Nilai UAS (40%)</label>
+        <input type="number" id="uas"
+               min="0" max="100" step="any"
+               required>
+
+        <button type="submit">Hitung Nilai</button>
+    </form>
+
+    <p id="pesan" role="alert"></p>
+
+    <div id="hasil" aria-live="polite">
+        <h3>Hasil Penilaian</h3>
+        <p>Nilai Akhir: <strong id="nilaiAkhir"></strong></p>
+        <p>Predikat: <strong id="predikat"></strong></p>
+        <p>Status: <strong id="status"></strong></p>
+    </div>
+</div>
+
+<script>
+    // Menghitung nilai akhir berdasarkan bobot
+    function hitungNilaiAkhir(tugas, uts, uas) {
+        return tugas * 0.30 +
+               uts * 0.30 +
+               uas * 0.40;
+    }
+
+    // Menentukan predikat berdasarkan nilai akhir
+    function tentukanPredikat(nilai) {
+        if (nilai >= 85) return "A";
+        if (nilai >= 75) return "B";
+        if (nilai >= 60) return "C";
+        if (nilai >= 50) return "D";
+        return "E";
+    }
+
+    // Menentukan status kelulusan
+    function tentukanStatus(nilai) {
+        return nilai >= 60 ? "Lulus" : "Belum lulus";
+    }
+
+    // Memeriksa apakah nilai berada dalam rentang 0–100
+    function validasiNilai(nilai) {
+        return Number.isFinite(nilai) &&
+               nilai >= 0 &&
+               nilai <= 100;
+    }
+
+    // Menampilkan hasil ke halaman HTML
+    function tampilkanHasil(nilaiAkhir) {
+        document.getElementById("nilaiAkhir").textContent =
+            nilaiAkhir.toFixed(2);
+
+        document.getElementById("predikat").textContent =
+            tentukanPredikat(nilaiAkhir);
+
+        document.getElementById("status").textContent =
+            tentukanStatus(nilaiAkhir);
+
+        document.getElementById("hasil").style.display = "block";
+    }
+
+    // Memproses input ketika form dikirim
+    document.getElementById("formNilai")
+        .addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const tugas = Number(
+                document.getElementById("tugas").value
+            );
+            const uts = Number(
+                document.getElementById("uts").value
+            );
+            const uas = Number(
+                document.getElementById("uas").value
+            );
+
+            const pesan = document.getElementById("pesan");
+            const hasil = document.getElementById("hasil");
+
+            pesan.textContent = "";
+            hasil.style.display = "none";
+
+            if (
+                !validasiNilai(tugas) ||
+                !validasiNilai(uts) ||
+                !validasiNilai(uas)
+            ) {
+                pesan.textContent =
+                    "Semua nilai harus berada pada rentang 0–100.";
+                return;
+            }
+
+            const akhir = hitungNilaiAkhir(tugas, uts, uas);
+            tampilkanHasil(akhir);
+        });
+</script>
+
+</body>
+</html>
