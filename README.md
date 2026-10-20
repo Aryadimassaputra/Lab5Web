@@ -1,8 +1,8 @@
 <<<<<<< HEAD
 # Praktikum 5 - JavaScript Dasar dan Manipulasi HTML<br>
 
-## Nama: Fadhil Syafiq Abdullah<br>
-## NIM: 312510161<br>  
+## Nama: Arya Dimas Saputra<br>
+## NIM: 312510214<br>  
 ## Mata Kuliah: Pemrograman Web <br> 
 
 
